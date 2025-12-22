@@ -70,7 +70,12 @@
 					<article id="post-{{ &articleSingle.id }}" class="post-{{ &articleSingle.id }} post type-post status-publish format-standard has-post-thumbnail hentry ">
 						<div class="entry">
 							<div class="entry-head">
-								<h1 class="entry-title">{{ &articleSingle.title }}</h1>
+								<h1 class="entry-title">
+									{{ #articleSingle.isPinned }}
+										<span style="color: #f59e0b; font-size: 0.9em; margin-right: 10px;">📌 置顶</span>
+									{{ /articleSingle.isPinned }}
+									{{ &articleSingle.title }}
+								</h1>
 								<div class="entry-info">
 									<time class="entry-date published" datetime="{{ &articleSingle.createDate }}" pubdate="">{{ &articleSingle.createDate10 }}</time>
 									<span class="dot">•</span>
