@@ -642,8 +642,6 @@
 
 	// ========== 初始化 ==========
 	$(function() {
-		$('#myTab li:eq(0) a').tab('show');
-
 		// 获取配置数据
 		var categoryJson = <!--{categoryJson}-->;
 		var menuJson = <!--{menuJson}-->;
@@ -658,8 +656,7 @@
 			mode : "markdown",
 			tex  : true,
 			tocm : true,
-			codeFold : true,
-			placeholder: "请输入 Markdown 格式的文章内容..."
+			codeFold : true
 		});
 
 		// 表单赋值
@@ -667,9 +664,9 @@
 		const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 		$('#createDate').val(localDateTime);
 
-		$('#WidgetCategory').val(JSON.stringify(categoryJson, null, 2));
-		$('#WidgetMenu').val(JSON.stringify(menuJson, null, 2));
-		$('#WidgetLink').val(JSON.stringify(linkJson, null, 2));
+		$('#WidgetCategory').val(JSON.stringify(categoryJson));
+		$('#WidgetMenu').val(JSON.stringify(menuJson));
+		$('#WidgetLink').val(JSON.stringify(linkJson));
 
 		var category = $('#category');
 		category.empty();
