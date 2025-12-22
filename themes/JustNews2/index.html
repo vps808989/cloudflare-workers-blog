@@ -94,9 +94,17 @@
 													</i>
 													<span class="waline-pageview-count" data-path="{{ &url }}" />
 												</span>
+												<span class="item-meta-li comments" title="评论数">
+													<i class="wpcom-icon wi">
+														<svg aria-hidden="true">
+															<use xlink:href="#wi-comment"></use>
+														</svg>
+													</i>
+													<span class="waline-comment-count" data-path="{{ &url }}" />
+												</span>
 											</div>
-												
-												
+
+
 										</div>
 									</div>
 								</li>
@@ -127,6 +135,9 @@
 
 							</ul>
 						</div>
+					</div>
+					<div id="comments" class="entry-comments">
+						{{ &OPT.commentCode }}
 					</div>
 				</div>
 				<aside class="sidebar">
