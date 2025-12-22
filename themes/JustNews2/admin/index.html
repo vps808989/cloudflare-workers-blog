@@ -777,17 +777,40 @@
 
 	// ========== 发布 ==========
 	function publish(){
-		if (confirm("确定吗?发布将清理所有静态缓存,重新生成") == false){
+		if (confirm("确定吗?保存并发布将清理所有静态缓存,重新生成") == false){
 			return false;
 		}
+
+		// 第一步：先保存文章
+		var postURL = "/admin/saveEdit/";
+		if ($('#id').val() == "" || $('#id').val() == null)
+			postURL = "/admin/saveAddNew/";
 
 		$.ajax({
 			type: "POST",
 			dataType: "json",
+			url: postURL,
 			contentType: "application/json; charset=utf-8",
-			url: "/admin/publish/",
+			data: JSON.stringify($("#addNewForm").serializeArray()),
 			success: function (result) {
-				alert(result.msg);
+				if ("id" in result){
+					$('#id').val(result.id);
+					$('#labelNew').text("编辑:" + result.id);
+					alert(result.msg);
+
+					// 第二步：保存成功后自动发布
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						url: "/admin/publish/",
+						success: function (publishResult) {
+							alert(publishResult.msg);
+						}
+					});
+				} else {
+					alert("失败");
+				}
 			}
 		});
 	}
