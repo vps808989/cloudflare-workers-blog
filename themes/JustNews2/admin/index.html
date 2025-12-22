@@ -493,8 +493,8 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="link">永久链接 *</label>
-							<input type="text" class="form-control" name="link" id="link" placeholder="my-article-url" required="true">
+							<label for="link">永久链接</label>
+							<input type="text" class="form-control" name="link" id="link" placeholder="my-article-url">
 						</div>
 					</div>
 				</div>
@@ -723,7 +723,7 @@
 					$('#labelNew').text("编辑:" + result.id);
 					alert(result.msg);
 				} else {
-					alert("失败");
+					alert("标题、时间、分类必填");
 				}
 			}
 		});
@@ -809,7 +809,7 @@
 						}
 					});
 				} else {
-					alert("失败");
+					alert("标题、时间、分类必填");
 				}
 			}
 		});
