@@ -529,18 +529,22 @@
 			url: "/admin/saveEdit/",
 			data: JSON.stringify($("#editForm").serializeArray()),
 			success: function (result) {
-				alert(result.msg);
+				if (result.msg) {
+					alert(result.msg);
 
-				// 第二步：保存成功后自动发布
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					contentType: "application/json; charset=utf-8",
-					url: "/admin/publish/",
-					success: function (publishResult) {
-						alert(publishResult.msg);
-					}
-				});
+					// 第二步：保存成功后自动发布
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						url: "/admin/publish/",
+						success: function (publishResult) {
+							alert(publishResult.msg);
+						}
+					});
+				} else {
+					alert("标题、时间、分类必填");
+				}
 			}
 		});
 	}
