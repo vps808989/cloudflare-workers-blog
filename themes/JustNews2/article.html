@@ -93,11 +93,13 @@
 								{{ &articleSingle.contentHtml }}
 							</div>
 							<div class="entry-footer">
+								{{ #articleSingle.tags.length }}
 								<div class="entry-tag">
 									{{ #articleSingle.tags }}
 										<a href="/tags/{{&.}}" rel="tag">{{&.}}</a>
 									{{ /articleSingle.tags }}
 								</div>
+								{{ /articleSingle.tags.length }}
 
 								<div class="entry-page">
 
