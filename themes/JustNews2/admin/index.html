@@ -651,7 +651,7 @@
 		var mdEditor = editormd("content", {
 			height : 640,
 			path   : "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
-			appendMarkdown : "# 开始写作吧！\n\n",
+			appendMarkdown : "# MarkDown",
 			saveHTMLToTextarea : true,
 			mode : "markdown",
 			tex  : true,
@@ -671,7 +671,7 @@
 		var category = $('#category');
 		category.empty();
 		for (var i = 0; i < categoryJson.length; i++) {
-			category.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
+			category.append('<option id=' + categoryJson[i] + ' value=' + categoryJson[i] + '>' + categoryJson[i] + '</option>');
 		}
 		category.selectpicker('refresh');
 
@@ -704,13 +704,6 @@
 
 	// ========== 保存文章 ==========
 	function saveAddNew(){
-		if($('#title').val() == "" || $('#title').val() == null ||
-		   $('#link').val() == "" || $('#link').val() == null ||
-		   $('#createDate').val() == "" || $('#createDate').val() == null){
-			alert("❌ 标题、链接和创建日期不能为空");
-			return;
-		}
-
 		var postURL = "/admin/saveEdit/";
 		if ($('#id').val() == "" || $('#id').val() == null)
 			postURL = "/admin/saveAddNew/";
@@ -724,10 +717,10 @@
 			success: function (result) {
 				if ("id" in result){
 					$('#id').val(result.id);
-					$('#labelNew').text("✏️ 编辑文章: " + result.id);
-					alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
+					$('#labelNew').text("编辑:" + result.id);
+					alert(result.msg);
 				} else {
-					alert("❌ 保存失败");
+					alert("失败");
 				}
 			}
 		});
@@ -736,15 +729,15 @@
 	// ========== 保存配置 ==========
 	function saveConfig(){
 		if(!isJSON($('#WidgetCategory').val())){
-			alert("❌ 分类格式错误，请检查 JSON 格式");
+			alert("分类格式错误");
 			return false;
 		}
 		if(!isJSON($('#WidgetMenu').val())){
-			alert("❌ 菜单格式错误，请检查 JSON 格式");
+			alert("菜单格式错误");
 			return false;
 		}
 		if(!isJSON($('#WidgetLink').val())){
-			alert("❌ 链接格式错误，请检查 JSON 格式");
+			alert("链接格式错误");
 			return false;
 		}
 
@@ -755,7 +748,7 @@
 			url: "/admin/saveConfig/",
 			data: JSON.stringify($("#configForm").serializeArray()),
 			success: function (result) {
-				alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
+				alert(result.msg);
 			}
 		});
 	}
@@ -763,7 +756,7 @@
 	// ========== 导入数据 ==========
 	function importBlog(){
 		if(!isJSON($('#importJson').val())){
-			alert("❌ 导入格式错误，请检查 JSON 格式");
+			alert("导入格式错误");
 			return false;
 		}
 
@@ -774,14 +767,14 @@
 			url: "/admin/import/",
 			data: JSON.stringify($("#importForm").serializeArray()),
 			success: function (result) {
-				alert("✅ " + result.msg);
+				alert(result.msg);
 			}
 		});
 	}
 
 	// ========== 发布 ==========
 	function publish(){
-		if (confirm("🚀 确定发布吗？\n\n发布将清理所有静态缓存并重新生成。\n此操作不可撤销。") == false){
+		if (confirm("确定吗?发布将清理所有静态缓存,重新生成") == false){
 			return false;
 		}
 
@@ -791,7 +784,7 @@
 			contentType: "application/json; charset=utf-8",
 			url: "/admin/publish/",
 			success: function (result) {
-				alert("✅ " + result.msg + "\n\n请在前端页面按 Ctrl+F5 强制刷新查看效果");
+				alert(result.msg);
 			}
 		});
 	}
