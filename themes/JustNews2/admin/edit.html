@@ -517,17 +517,30 @@
 
 	// ========== 发布 ==========
 	function publish(){
-		if (confirm("确定吗?发布将清理所有静态缓存,重新生成") == false){
+		if (confirm("确定吗?保存并发布将清理所有静态缓存,重新生成") == false){
 			return false;
 		}
 
+		// 第一步：先保存文章
 		$.ajax({
 			type: "POST",
 			dataType: "json",
 			contentType: "application/json; charset=utf-8",
-			url: "/admin/publish/",
+			url: "/admin/saveEdit/",
+			data: JSON.stringify($("#editForm").serializeArray()),
 			success: function (result) {
 				alert(result.msg);
+
+				// 第二步：保存成功后自动发布
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					contentType: "application/json; charset=utf-8",
+					url: "/admin/publish/",
+					success: function (publishResult) {
+						alert(publishResult.msg);
+					}
+				});
 			}
 		});
 	}
