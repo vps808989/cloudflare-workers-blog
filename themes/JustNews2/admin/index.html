@@ -615,7 +615,7 @@
 				前端生效需要 <kbd>Ctrl+F5</kbd> 强制刷新
 			</p>
 
-			<button class="btn" onclick="publish()">🚀 立即发布</button>
+			<button class="btn" onclick="publishOnly()">🚀 立即发布</button>
 		</div>
 	</div>
 </div>
@@ -775,7 +775,24 @@
 		});
 	}
 
-	// ========== 发布 ==========
+	// ========== 发布（仅清理缓存，不保存文章）==========
+	function publishOnly(){
+		if (confirm("确定吗?发布将清理所有静态缓存,重新生成") == false){
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			url: "/admin/publish/",
+			success: function (result) {
+				alert(result.msg);
+			}
+		});
+	}
+
+	// ========== 发布（先保存文章再发布）==========
 	function publish(){
 		if (confirm("确定吗?保存并发布将清理所有静态缓存,重新生成") == false){
 			return false;
