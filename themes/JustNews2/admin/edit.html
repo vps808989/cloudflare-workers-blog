@@ -445,8 +445,6 @@
 
 	// ========== 初始化 ==========
 	$(function() {
-		$('#myTab li:eq(0) a').tab('show');
-
 		// 获取文章数据
 		var articleJson = <!--{articleJson}-->;
 		// 获取分类数据
@@ -461,8 +459,7 @@
 			mode : "markdown",
 			tex  : true,
 			tocm : true,
-			codeFold : true,
-			placeholder: "请输入 Markdown 格式的文章内容..."
+			codeFold : true
 		});
 
 		// 表单赋值
@@ -487,13 +484,6 @@
 
 	// ========== 保存文章 ==========
 	function saveEdit(){
-		if($('#title').val() == "" || $('#title').val() == null ||
-		   $('#link').val() == "" || $('#link').val() == null ||
-		   $('#createDate').val() == "" || $('#createDate').val() == null){
-			alert("❌ 标题、链接和创建日期不能为空");
-			return;
-		}
-
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -501,14 +491,14 @@
 			url: "/admin/saveEdit/",
 			data: JSON.stringify($("#editForm").serializeArray()),
 			success: function (result) {
-				alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
+				alert(result.msg);
 			}
 		});
 	}
 
 	// ========== 删除文章 ==========
 	function deleteArticle(){
-		if (confirm("🗑️ 确定删除这篇文章吗？\n\n删除后需要重新发布才能生效。\n此操作不可撤销。") == false){
+		if (confirm("确定删除吗?删除后重新发布才能生效") == false){
 			return false;
 		}
 
@@ -519,10 +509,7 @@
 			url: "/admin/delete/" + $('#id').val(),
 			data: JSON.stringify([{"id": $('#id').val()}]),
 			success: function (result) {
-				alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
-				setTimeout(function(){
-					window.location.href = "/admin/";
-				}, 1500);
+				alert(result.msg);
 			}
 		});
 	}
