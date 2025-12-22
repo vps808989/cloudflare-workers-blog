@@ -1,336 +1,821 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 	<meta charset="utf-8">
-	<title>CF-blog后台</title>
-    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/gdtool/zhaopp/cfblog/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CF-blog 后台管理</title>
+	<link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/gdtool/zhaopp/cfblog/favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon"  href="https://cdn.jsdelivr.net/gh/gdtool/zhaopp/cfblog/favicon.ico"/>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/examples/css/style.css" />-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
-    <link rel="stylesheet" href="https://cdn.staticfile.org/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-    
-    <script src="https://cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-zh_CN.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.css" />
+	<link rel="stylesheet" href="https://cdn.staticfile.org/bootstrap-select/1.9.4/css/bootstrap-select.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+	<script src="https://cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-zh_CN.min.js"></script>
+
 	<style>
+		/* ========== 全局样式 ========== */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+			background: #f5f7fa;
+			color: #2c3e50;
+			line-height: 1.6;
+			transition: background 0.3s, color 0.3s;
+		}
+
+		/* ========== 顶部导航栏 ========== */
+		.admin-header {
+			background: #fff;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+			padding: 0;
+			margin-bottom: 30px;
+			border-bottom: 2px solid #3b82f6;
+		}
+
+		.admin-header .navbar {
+			margin-bottom: 0;
+			border: none;
+			border-radius: 0;
+		}
+
+		.admin-header .navbar-brand {
+			font-size: 20px;
+			font-weight: 600;
+			color: #3b82f6 !important;
+			padding: 15px 20px;
+		}
+
+		.admin-header .nav-tabs {
+			border-bottom: none;
+		}
+
+		.admin-header .nav-tabs > li > a {
+			border: none !important;
+			border-radius: 0;
+			padding: 15px 25px;
+			color: #666;
+			font-weight: 500;
+			transition: all 0.3s;
+		}
+
+		.admin-header .nav-tabs > li > a:hover {
+			background: #f0f7ff;
+			color: #3b82f6;
+		}
+
+		.admin-header .nav-tabs > li.active > a {
+			background: #3b82f6 !important;
+			color: #fff !important;
+			border: none !important;
+		}
+
+		/* ========== 卡片容器 ========== */
+		.admin-card {
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+			padding: 25px;
+			margin-bottom: 25px;
+		}
+
+		.admin-card h3 {
+			font-size: 20px;
+			font-weight: 600;
+			color: #2c3e50;
+			margin-bottom: 20px;
+			padding-bottom: 12px;
+			border-bottom: 2px solid #e5e7eb;
+		}
+
+		/* ========== 表单样式 ========== */
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-group label {
+			display: block;
+			font-weight: 500;
+			color: #4b5563;
+			margin-bottom: 8px;
+		}
+
+		.form-control {
+			height: 42px;
+			border: 1px solid #d1d5db;
+			border-radius: 6px;
+			padding: 8px 12px;
+			font-size: 14px;
+			transition: all 0.3s;
+		}
+
+		.form-control:focus {
+			border-color: #3b82f6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+			outline: none;
+		}
+
+		textarea.form-control {
+			height: auto;
+			resize: vertical;
+		}
+
+		/* ========== 按钮样式 ========== */
+		.btn {
+			padding: 10px 20px;
+			border-radius: 6px;
+			font-size: 14px;
+			font-weight: 500;
+			transition: all 0.3s;
+			border: none;
+			cursor: pointer;
+		}
+
+		.btn-primary {
+			background: #3b82f6;
+			color: #fff;
+		}
+
+		.btn-primary:hover {
+			background: #2563eb;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+		}
+
+		.btn-default {
+			background: #fff;
+			color: #666;
+			border: 1px solid #d1d5db;
+		}
+
+		.btn-default:hover {
+			background: #f9fafb;
+			border-color: #3b82f6;
+			color: #3b82f6;
+		}
+
+		.btn-warning {
+			background: #ef4444;
+			color: #fff;
+		}
+
+		.btn-warning:hover {
+			background: #dc2626;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+		}
+
+		.btn-success {
+			background: #10b981;
+			color: #fff;
+		}
+
+		.btn-success:hover {
+			background: #059669;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+		}
+
+		/* ========== 表格样式 ========== */
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table thead {
+			background: #f9fafb;
+		}
+
+		.table thead th {
+			font-weight: 600;
+			color: #4b5563;
+			border-bottom: 2px solid #e5e7eb;
+			padding: 12px 15px;
+		}
+
+		.table tbody tr {
+			transition: background 0.2s;
+		}
+
+		.table tbody tr:hover {
+			background: #f9fafb;
+		}
+
+		.table tbody td {
+			padding: 12px 15px;
+			vertical-align: middle;
+		}
+
+		.table tbody td a {
+			color: #3b82f6;
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		.table tbody td a:hover {
+			text-decoration: underline;
+		}
+
+		/* ========== 发布提示卡片 ========== */
+		.publish-card {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: #fff;
+			border-radius: 12px;
+			padding: 30px;
+			text-align: center;
+		}
+
+		.publish-card .lead {
+			font-size: 16px;
+			line-height: 1.8;
+			margin-bottom: 20px;
+			opacity: 0.95;
+		}
+
+		.publish-card .btn {
+			background: #fff;
+			color: #667eea;
+			font-weight: 600;
+			padding: 12px 30px;
+			font-size: 16px;
+		}
+
+		.publish-card .btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+		}
+
+		/* ========== 深色模式切换按钮 ========== */
+		.dark-mode-toggle {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			width: 45px;
+			height: 45px;
+			background: #fff;
+			border: 1px solid #e5e7eb;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+			z-index: 1000;
+			transition: all 0.3s;
+		}
+
+		.dark-mode-toggle:hover {
+			background: #f9fafb;
+			border-color: #3b82f6;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		}
+
+		.dark-mode-toggle svg {
+			width: 22px;
+			height: 22px;
+			fill: #666;
+		}
+
+		/* ========== 深色模式样式 ========== */
+		html.dark body {
+			background: #0f172a;
+			color: #e2e8f0;
+		}
+
+		html.dark .admin-header {
+			background: #1e293b;
+			border-bottom-color: #3b82f6;
+		}
+
+		html.dark .admin-header .navbar-brand {
+			color: #60a5fa !important;
+		}
+
+		html.dark .admin-header .nav-tabs > li > a {
+			color: #94a3b8;
+		}
+
+		html.dark .admin-header .nav-tabs > li > a:hover {
+			background: #334155;
+			color: #60a5fa;
+		}
+
+		html.dark .admin-card {
+			background: #1e293b;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+		}
+
+		html.dark .admin-card h3 {
+			color: #f1f5f9;
+			border-bottom-color: #334155;
+		}
+
+		html.dark .form-group label {
+			color: #cbd5e1;
+		}
+
+		html.dark .form-control {
+			background: #0f172a;
+			border-color: #334155;
+			color: #e2e8f0;
+		}
+
+		html.dark .form-control:focus {
+			border-color: #60a5fa;
+			box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+		}
+
+		html.dark .btn-default {
+			background: #334155;
+			border-color: #475569;
+			color: #cbd5e1;
+		}
+
+		html.dark .btn-default:hover {
+			background: #475569;
+			border-color: #60a5fa;
+			color: #60a5fa;
+		}
+
+		html.dark .table thead {
+			background: #0f172a;
+		}
+
+		html.dark .table thead th {
+			color: #cbd5e1;
+			border-bottom-color: #334155;
+		}
+
+		html.dark .table tbody tr:hover {
+			background: #334155;
+		}
+
+		html.dark .table tbody td {
+			border-color: #334155;
+			color: #cbd5e1;
+		}
+
+		html.dark .table tbody td a {
+			color: #60a5fa;
+		}
+
+		html.dark .dark-mode-toggle {
+			background: #1e293b;
+			border-color: #334155;
+		}
+
+		html.dark .dark-mode-toggle:hover {
+			background: #334155;
+			border-color: #60a5fa;
+		}
+
+		html.dark .dark-mode-toggle svg {
+			fill: #94a3b8;
+		}
+
 		.bootstrap-select>.dropdown-toggle {
-		z-index:auto;
+			z-index:auto;
+		}
+
+		/* ========== 加载更多按钮 ========== */
+		#loadmore {
+			display: block;
+			width: 100%;
+			margin-top: 20px;
+		}
+
+		/* ========== 编辑器容器 ========== */
+		#content {
+			margin-top: 20px;
+		}
+
+		/* ========== 响应式 ========== */
+		@media (max-width: 768px) {
+			.admin-header .nav-tabs > li > a {
+				padding: 12px 15px;
+				font-size: 13px;
+			}
+
+			.admin-card {
+				padding: 15px;
+			}
+
+			.dark-mode-toggle {
+				width: 40px;
+				height: 40px;
+			}
 		}
 	</style>
-	
+
 </head>
 <body>
 
-<nav class="navbar navbar-default " role="navigation">
-	<div class="container-fluid">
+<!-- 深色模式切换按钮 -->
+<button class="dark-mode-toggle" id="darkModeToggle" title="切换深色模式">
+	<svg viewBox="0 0 24 24">
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+	</svg>
+</button>
 
-	<div>
-		<ul id="myTab" class="nav nav-tabs">
-			<li>
-				<a href="/" >CF-blog</a>
-			</li>
-			<li>
-				<a href="#list" data-toggle="tab">我的文章</a>
-			</li>
-			<li  class="active">
-				<a href="#new" data-toggle="tab">新建</a>
-			</li>
-			<li>
-				<a href="#config" data-toggle="tab">设置</a>
-			</li>
-			<li>
-				<a href="#pub" data-toggle="tab">发布</a>
-			</li>
-		</ul>
-	</div>
-	</div>
-</nav>
-<div id="myTabContent" class="tab-content" style="padding-top: 60px;">
+<div class="admin-header">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">📝 CF-Blog 后台管理</a>
+			</div>
+			<ul id="myTab" class="nav nav-tabs navbar-right" style="margin-right: 60px;">
+				<li>
+					<a href="/" target="_blank">🏠 访问首页</a>
+				</li>
+				<li>
+					<a href="#list" data-toggle="tab">📄 我的文章</a>
+				</li>
+				<li class="active">
+					<a href="#new" data-toggle="tab">✨ 新建文章</a>
+				</li>
+				<li>
+					<a href="#config" data-toggle="tab">⚙️ 系统设置</a>
+				</li>
+				<li>
+					<a href="#pub" data-toggle="tab">🚀 发布</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</div>
+
+<div id="myTabContent" class="tab-content container">
+	<!-- 文章列表 -->
 	<div class="tab-pane fade" id="list">
-		<div class="container" >
-			<table class="table  table-striped" id="articleList">
-				  <tr><td>ID</td><td>标题</td><td>创建日期</td></tr>
+		<div class="admin-card">
+			<h3>📄 文章列表</h3>
+			<table class="table table-striped" id="articleList">
+				<thead>
+					<tr>
+						<th width="10%">ID</th>
+						<th width="60%">标题</th>
+						<th width="30%">创建日期</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
 			</table>
-			<input type="hidden"  name="page" id="page" value='1'>
-			<a id="loadmore" class="btn btn-default">加载更多...</a>
-		</div> 
+			<input type="hidden" name="page" id="page" value='1'>
+			<button id="loadmore" class="btn btn-default">加载更多...</button>
+		</div>
 	</div>
+
+	<!-- 新建文章 -->
 	<div class="tab-pane fade in active" id="new">
-		<div class="container">
-			<h3 id="labelNew">新增</h3>   
-			<form id="addNewForm"  class="form-inline" >
-				<div class="form-group" style="width: 98%">
-					<input type="hidden" class="form-control" name="id" id="id" >
-					<input type="text" class="form-control" name="title" id="title" placeholder="标题" style="width: 100%;" required="true">
-				</div>
+		<div class="admin-card">
+			<h3 id="labelNew">✨ 新建文章</h3>
+			<form id="addNewForm">
+				<input type="hidden" class="form-control" name="id" id="id">
+
 				<div class="form-group">
-					<label for="exampleInputEmail2">特色图片</label>
-					<input type="url" class="form-control" style="width: 400px;"  name="img" id="img" placeholder="" >
+					<label for="title">文章标题 *</label>
+					<input type="text" class="form-control" name="title" id="title" placeholder="请输入文章标题" required="true">
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">永久链接</label>
-					<input type="text" class="form-control" name="link" id="link" placeholder="" required="true">
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="img">特色图片</label>
+							<input type="url" class="form-control" name="img" id="img" placeholder="https://example.com/image.jpg">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="link">永久链接 *</label>
+							<input type="text" class="form-control" name="link" id="link" placeholder="my-article-url" required="true">
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">创建日期</label>
-					<input type="datetime-local" class="form-control" id="createDate" name="createDate" placeholder=""  required="true">
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="createDate">创建日期 *</label>
+							<input type="datetime-local" class="form-control" id="createDate" name="createDate" required="true">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="category">分类</label>
+							<select class="selectpicker form-control" multiple name="category[]" id="category" data-live-search="true"></select>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">分类</label>
-					<select class="selectpicker" multiple name="category[]" id="category">
-					</select>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="tags">标签</label>
+							<input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2,标签3">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="priority">权重</label>
+							<input type="text" class="form-control" name="priority" id="priority" value='0.5' placeholder="0.5">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label for="changefreq">更新频率</label>
+							<select class="form-control" id="changefreq" name="changefreq">
+								<option value="daily" selected>每天 (daily)</option>
+								<option value="hourly">每小时 (hourly)</option>
+								<option value="weekly">每周 (weekly)</option>
+								<option value="monthly">每月 (monthly)</option>
+								<option value="yearly">每年 (yearly)</option>
+								<option value="never">从不 (never)</option>
+								<option value="always">总是 (always)</option>
+							</select>
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">标签</label>
-					<input type="text" class="form-control" name="tags" id="tags" placeholder="标签1,标签2">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">权重</label>
-					<input type="text" class="form-control" name="priority" id="priority" value='0.5' placeholder="权重">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">更新频率</label>
-					    <select class="form-control" id="changefreq" name="changefreq">
-						<option value="daily" selected  = "selected" >daily</option>
-						<option value="hourly" >hourly</option>
-						<option value="weekly" >weekly</option>
-						<option value="monthly" >monthly</option>
-						<option value="yearly" >yearly</option>
-						<option value="never" >never</option>
-						<option value="always" >always</option>
-					    </select>
-				</div>
-					<a  tabindex="0"  role="button"  type="submit" id="btn_saveAddNew" class="btn btn-default" onclick="saveAddNew()">保存</a>
-					
+
+				<button type="button" id="btn_saveAddNew" class="btn btn-primary" onclick="saveAddNew()">💾 保存文章</button>
+
 				<div id="content"><textarea style="display:none;"></textarea></div>
 			</form>
 		</div>
 	</div>
-	
+
+	<!-- 系统设置 -->
 	<div class="tab-pane fade" id="config">
-		
-		<div class="container" >
-			<form id="configForm" role="form" >
+		<div class="admin-card">
+			<h3>⚙️ 系统配置</h3>
+			<form id="configForm" role="form">
 				<div class="form-group">
-				    <label for="name">分类, 例:<code>["类别A","类别B","类别C","类别D"]</code></label>
-					<textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3" placeholder='["分类A","分类B"]'></textarea>
+					<label for="WidgetCategory">分类设置</label>
+					<small class="text-muted" style="display: block; margin-bottom: 5px;">
+						示例: <code>["技术文章","生活随笔","学习笔记"]</code>
+					</small>
+					<textarea class="form-control" id="WidgetCategory" name="WidgetCategory" rows="3" placeholder='["分类A","分类B","分类C"]'></textarea>
 				</div>
-	
+
 				<div class="form-group">
-				    <label for="name">菜单, 例:<code>[{"title":"技术文章","url":"/category/技术文章"},{"title":"管理","url":"/admin"}]</code></label>
-					<textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5"  placeholder='[
-	{"title":"菜单A"	,"url":"/category/菜单A"},
-	{"title":"菜单B"	,"url":"/category/菜单B"}
-]'></textarea>
+					<label for="WidgetMenu">导航菜单</label>
+					<small class="text-muted" style="display: block; margin-bottom: 5px;">
+						示例: <code>[{"title":"技术文章","url":"/category/技术文章"},{"title":"管理后台","url":"/admin"}]</code>
+					</small>
+					<textarea class="form-control" id="WidgetMenu" name="WidgetMenu" rows="5" placeholder='[{"title":"菜单A","url":"/category/菜单A"},{"title":"菜单B","url":"/category/菜单B"}]'></textarea>
 				</div>
+
 				<div class="form-group">
-				    <label for="name">其他链接, 例:<code>[{"title":"我的好友","url":"https://blog.gezhong.vip/"},{"title":"谷歌","url":"https://www.google.com/"}]</code></label>
-					<textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5"  placeholder='[
-	{"title":"好友"	,"url":"https://blog.gezhong.vip/"},
-	{"title":"谷歌"	,"url":"https://www.google.com/"}
-]'></textarea>
+					<label for="WidgetLink">友情链接</label>
+					<small class="text-muted" style="display: block; margin-bottom: 5px;">
+						示例: <code>[{"title":"我的好友","url":"https://blog.example.com/"},{"title":"谷歌","url":"https://www.google.com/"}]</code>
+					</small>
+					<textarea class="form-control" id="WidgetLink" name="WidgetLink" rows="5" placeholder='[{"title":"好友博客","url":"https://blog.example.com/"},{"title":"Google","url":"https://www.google.com/"}]'></textarea>
 				</div>
-				<a  tabindex="0"  role="button"  type="submit" id="btn_saveConfig" class="btn btn-default" onclick="saveConfig()">保存</a>
+
+				<button type="button" id="btn_saveConfig" class="btn btn-success" onclick="saveConfig()">💾 保存配置</button>
 			</form>
-			
+		</div>
 
-			<form id="importForm" role="form" >
+		<div class="admin-card">
+			<h3>📦 数据导入/导出</h3>
+			<form id="importForm" role="form">
 				<div class="form-group">
-				    <label for="name">导出/导入</label>
-					<textarea class="form-control" id="importJson" name="importJson" rows="3" placeholder='复制完整的导出json'></textarea>
+					<label for="importJson">导入数据</label>
+					<small class="text-muted" style="display: block; margin-bottom: 5px;">
+						粘贴完整的导出JSON数据
+					</small>
+					<textarea class="form-control" id="importJson" name="importJson" rows="5" placeholder='粘贴导出的 JSON 数据...'></textarea>
 				</div>
 
-				<a  tabindex="0"  role="button"  type="submit" id="btn_import" class="btn btn-default" onclick="importBlog()">导入</a>
-				<a  tabindex="0"  role="button"  type="submit" id="btn_export" class="btn btn-default"  href="/admin/export/" >导出</a>
+				<button type="button" id="btn_import" class="btn btn-primary" onclick="importBlog()">📥 导入数据</button>
+				<a id="btn_export" class="btn btn-default" href="/admin/export/">📤 导出数据</a>
 			</form>
-
-			
 		</div>
 	</div>
 
+	<!-- 发布 -->
 	<div class="tab-pane fade" id="pub">
-		<div class="container" >
-			<div class="jumbotron" >
-				<p class="lead">
-				由于前端使用缓存,以下操作需要发布:新建文章、发布文章、修改后台配置、修改workers配置</br>
-				前端生效需要ctrl+F5 强制刷新
-				</p>
-				
-				<a href="#" class="btn btn-default" onclick="publish()">发布</a>
-			</div>
+		<div class="publish-card">
+			<h2 style="margin-bottom: 20px; font-weight: 600;">🚀 发布更新</h2>
+			<p class="lead">
+				以下操作需要发布才能生效：<br>
+				• 新建文章 • 编辑文章 • 删除文章<br>
+				• 修改后台配置 • 修改 Workers 配置<br><br>
+				<strong>发布将清理所有静态缓存并重新生成</strong><br>
+				前端生效需要 <kbd>Ctrl+F5</kbd> 强制刷新
+			</p>
+
+			<button class="btn" onclick="publish()">🚀 立即发布</button>
 		</div>
-	</div>	
+	</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.js"></script>   
+<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.js"></script>
 <script type="text/javascript">
+	// ========== 深色模式切换 ==========
+	const darkModeToggle = document.getElementById('darkModeToggle');
+	const sunIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+	const moonIcon = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+	// 从 localStorage 读取深色模式设置
+	const isDarkMode = localStorage.getItem('adminDarkMode') === 'true';
+	if (isDarkMode) {
+		document.documentElement.classList.add('dark');
+		darkModeToggle.innerHTML = sunIcon;
+	} else {
+		darkModeToggle.innerHTML = moonIcon;
+	}
+
+	// 切换深色模式
+	darkModeToggle.addEventListener('click', function() {
+		const isDark = document.documentElement.classList.toggle('dark');
+		localStorage.setItem('adminDarkMode', isDark);
+		darkModeToggle.innerHTML = isDark ? sunIcon : moonIcon;
+	});
+
+	// ========== 初始化 ==========
 	$(function() {
-		$('#myTab li:eq(0) 1').tab('show');
-		//获取分类
+		$('#myTab li:eq(0) a').tab('show');
+
+		// 获取配置数据
 		var categoryJson = <!--{categoryJson}-->;
-		//获取菜单
 		var menuJson = <!--{menuJson}-->;
 		var linkJson = <!--{linkJson}-->;
+
+		// 初始化 MarkDown 编辑器
 		var mdEditor = editormd("content", {
-				// width  : "90%",
-				 height : 640,
-				path   : "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
-				appendMarkdown : "# MarkDown", 
-				saveHTMLToTextarea : true,
-				mode : "markdown",
-				tex  : true,
-				tocm : true, 
-				codeFold : true
-			});
-		//表单赋值
-		$('#createDate').val(new Date());
-		
-		$('#WidgetCategory').val(JSON.stringify(categoryJson));
-		$('#WidgetMenu').val(JSON.stringify(menuJson));
-		$('#WidgetLink').val(JSON.stringify(linkJson));
+			height : 640,
+			path   : "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+			appendMarkdown : "# 开始写作吧！\n\n",
+			saveHTMLToTextarea : true,
+			mode : "markdown",
+			tex  : true,
+			tocm : true,
+			codeFold : true,
+			placeholder: "请输入 Markdown 格式的文章内容..."
+		});
+
+		// 表单赋值
+		const now = new Date();
+		const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+		$('#createDate').val(localDateTime);
+
+		$('#WidgetCategory').val(JSON.stringify(categoryJson, null, 2));
+		$('#WidgetMenu').val(JSON.stringify(menuJson, null, 2));
+		$('#WidgetLink').val(JSON.stringify(linkJson, null, 2));
+
 		var category = $('#category');
 		category.empty();
 		for (var i = 0; i < categoryJson.length; i++) {
-			category.append('<option id=' + categoryJson[i] + ' value=' + categoryJson[i] + '>' + categoryJson[i] + '</option>');
+			category.append('<option value="' + categoryJson[i] + '">' + categoryJson[i] + '</option>');
 		}
-		$("#loadmore").click();//初始加载一页
+		category.selectpicker('refresh');
+
+		// 初始加载文章列表
+		$("#loadmore").click();
 	});
-    //加载文章列表	
-    $("#loadmore").click(function(){
-        var page=$("#page").val();
-        $.ajax({
-            url:"/admin/getList/" + page + "/",
-            type:'GET',
-            dataType:"json",
-            //data:{"page":page,"typeid":typeid},
-            success:function(data){
-    
-                    tableContent="";
-                    $.each(data,function(i){
-                        var Info = data[i];
-                        var num = i+1;
-                        tableContent += '<tr><td>'+Info.id+'</td><td><a href="/admin/edit/'+Info.id+'/">'+Info.title+'</a></td><td>'+Info.createDate.replace("T","")+'</td></tr>';
-     
-                    })
-                    $("#articleList").append(tableContent);
-                    $("#page").val(++page);
-      
-            }
-        });
-    })
-    //新建文章
-    function saveAddNew(){
-        if(
-            $('#WidgetMenu').val() == "" || $('#WidgetMenu').val() == null
-            || $('#createDate').val() == "" || $('#createDate').val() == null
-            || $('#createDate').val() == "" || $('#createDate').val() == null
-        
-        ){
-           alert("信息不全");
-           return;
-            
-        }
-        var postURL = "/admin/saveEdit/";
-        if ($('#id').val() == "" || $('#id').val() == null)
-            postURL=  "/admin/saveAddNew/";
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: postURL ,//url
+
+	// ========== 加载文章列表 ==========
+	$("#loadmore").click(function(){
+		var page = $("#page").val();
+		$.ajax({
+			url: "/admin/getList/" + page + "/",
+			type: 'GET',
+			dataType: "json",
+			success: function(data){
+				var tableContent = "";
+				$.each(data, function(i){
+					var Info = data[i];
+					tableContent += '<tr>' +
+						'<td>' + Info.id + '</td>' +
+						'<td><a href="/admin/edit/' + Info.id + '/">' + Info.title + '</a></td>' +
+						'<td>' + Info.createDate.replace("T", " ") + '</td>' +
+						'</tr>';
+				});
+				$("#articleList tbody").append(tableContent);
+				$("#page").val(++page);
+			}
+		});
+	});
+
+	// ========== 保存文章 ==========
+	function saveAddNew(){
+		if($('#title').val() == "" || $('#title').val() == null ||
+		   $('#link').val() == "" || $('#link').val() == null ||
+		   $('#createDate').val() == "" || $('#createDate').val() == null){
+			alert("❌ 标题、链接和创建日期不能为空");
+			return;
+		}
+
+		var postURL = "/admin/saveEdit/";
+		if ($('#id').val() == "" || $('#id').val() == null)
+			postURL = "/admin/saveAddNew/";
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: postURL,
 			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify($("#addNewForm").serializeArray()), 
-            success: function (result) {
-                if ("id" in result){
-                    $('#id').val(result.id);
-					$('#labelNew').text("编辑:"+result.id);
-                    alert(result.msg);
-                }
-                else 
-                {
-					alert("失败");
+			data: JSON.stringify($("#addNewForm").serializeArray()),
+			success: function (result) {
+				if ("id" in result){
+					$('#id').val(result.id);
+					$('#labelNew').text("✏️ 编辑文章: " + result.id);
+					alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
+				} else {
+					alert("❌ 保存失败");
 				}
-            }
-        });
-    }
-    //保存设置
-    function saveConfig(){
-        if(!isJSON($('#WidgetCategory').val()))
-        {
-            alert("分类格式错误"); 
-            return false;
-        }
-        if(!isJSON($('#WidgetMenu').val()))
-        {
-            alert("菜单格式错误"); 
-            return false;
-        }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
+			}
+		});
+	}
+
+	// ========== 保存配置 ==========
+	function saveConfig(){
+		if(!isJSON($('#WidgetCategory').val())){
+			alert("❌ 分类格式错误，请检查 JSON 格式");
+			return false;
+		}
+		if(!isJSON($('#WidgetMenu').val())){
+			alert("❌ 菜单格式错误，请检查 JSON 格式");
+			return false;
+		}
+		if(!isJSON($('#WidgetLink').val())){
+			alert("❌ 链接格式错误，请检查 JSON 格式");
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
 			contentType: "application/json; charset=utf-8",
-            url: "/admin/saveConfig/" ,//url
-			data: JSON.stringify($("#configForm").serializeArray()), 
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    //导入json
-    function importBlog(){
-        if(!isJSON($('#importJson').val()))
-        {
-            alert("导入格式错误"); 
-            return false;
-        }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
+			url: "/admin/saveConfig/",
+			data: JSON.stringify($("#configForm").serializeArray()),
+			success: function (result) {
+				alert("✅ " + result.msg + "\n\n请点击「发布」标签发布更新");
+			}
+		});
+	}
+
+	// ========== 导入数据 ==========
+	function importBlog(){
+		if(!isJSON($('#importJson').val())){
+			alert("❌ 导入格式错误，请检查 JSON 格式");
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
 			contentType: "application/json; charset=utf-8",
-            url: "/admin/import/" ,//url
-			data: JSON.stringify($("#importForm").serializeArray()), 
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    //发布
-    function publish(){
-        if (confirm("确定吗?发布将清理所有静态缓存,重新生成")==false){ 
-            return false; 
-          }
-        $.ajax({
-            type: "POST",
-            dataType: "json",
+			url: "/admin/import/",
+			data: JSON.stringify($("#importForm").serializeArray()),
+			success: function (result) {
+				alert("✅ " + result.msg);
+			}
+		});
+	}
+
+	// ========== 发布 ==========
+	function publish(){
+		if (confirm("🚀 确定发布吗？\n\n发布将清理所有静态缓存并重新生成。\n此操作不可撤销。") == false){
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
 			contentType: "application/json; charset=utf-8",
-            url: "/admin/publish/" ,//url
-            success: function (result) {
-                alert(result.msg);
-            }
-        });
-    }
-    function isJSON(str) {
-        if (typeof str == 'string') {
-            try {
-                var obj=JSON.parse(str);
-                if(typeof obj == 'object' && obj ){
-                    return true;
-                }else{
-                    return false;
-                }
-    
-            } catch(e) {
-               // console.log('error：'+str+'!!!'+e);
-                return false;
-            }
-        }
-        return false;
-    }
+			url: "/admin/publish/",
+			success: function (result) {
+				alert("✅ " + result.msg + "\n\n请在前端页面按 Ctrl+F5 强制刷新查看效果");
+			}
+		});
+	}
+
+	// ========== JSON 验证 ==========
+	function isJSON(str) {
+		if (typeof str == 'string') {
+			try {
+				var obj = JSON.parse(str);
+				if(typeof obj == 'object' && obj ){
+					return true;
+				}else{
+					return false;
+				}
+			} catch(e) {
+				return false;
+			}
+		}
+		return false;
+	}
 </script>
- 
 
 </body>
-
 </html>
