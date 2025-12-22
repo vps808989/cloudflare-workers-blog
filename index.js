@@ -6,8 +6,8 @@ const OPT = {
     "siteName" : "CF workers blog",
     "siteDescription":"A Blog Powered By Cloudflare Workers and KV",
     "keyWords":"cloudflare,KV,workers,blog",
-    "cacheZoneId":"8e75a272be442fc6408962fef90debb1",
-    "cacheToken":"MsLPjglInxXq6KpFKRKcR0PliuxUfmofWhRALhnK",
+    "cacheZoneId":"绑定的自定义域名区域ID",
+       "cacheTok:n":"填写cloudflare api token",
 
     "pageSize" : 5,
     "recentlySize" : 6,
