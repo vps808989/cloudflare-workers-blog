@@ -411,6 +411,7 @@
 
 			<div class="btn-group">
 				<button type="button" id="btn_saveEdit" class="btn btn-primary" onclick="saveEdit()">💾 保存文章</button>
+				<button type="button" class="btn btn-success" onclick="publish()">🚀 保存并发布</button>
 				<button type="button" id="btn_delete" class="btn btn-warning" onclick="deleteArticle()">🗑️ 删除文章</button>
 				<a href="/admin/" class="btn btn-default">❌ 取消编辑</a>
 			</div>
@@ -508,6 +509,23 @@
 			contentType: "application/json; charset=utf-8",
 			url: "/admin/delete/" + $('#id').val(),
 			data: JSON.stringify([{"id": $('#id').val()}]),
+			success: function (result) {
+				alert(result.msg);
+			}
+		});
+	}
+
+	// ========== 发布 ==========
+	function publish(){
+		if (confirm("确定吗?发布将清理所有静态缓存,重新生成") == false){
+			return false;
+		}
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			url: "/admin/publish/",
 			success: function (result) {
 				alert(result.msg);
 			}
