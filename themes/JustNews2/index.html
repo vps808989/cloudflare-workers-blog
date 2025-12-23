@@ -72,12 +72,12 @@
 									<div class="item-img">
 										{{ #img }}
 										<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" rel="bookmark">
-											<img width="437" height="300" src="{{ &img }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" data-original="{{ &img }}" style="object-fit: contain; object-position: center;" />
+											<img width="437" height="300" src="{{ &img }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" data-original="{{ &img }}" style="object-fit: cover; object-position: center;" />
 										</a>
 										{{ /img }}
 										{{ ^img }}
-										<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" rel="bookmark" style="display: block; width: 437px; height: 300px;">
-											<img width="437" height="300" src="https://cdn.jsdelivr.net/gh/vps808989/cloudflare-workers-blog@master/themes/JustNews2/images/defaults/{{ &defaultImg }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" style="object-fit: contain; object-position: center;" />
+										<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" rel="bookmark">
+											<img width="437" height="300" src="https://cdn.jsdelivr.net/gh/vps808989/cloudflare-workers-blog@master/themes/JustNews2/images/defaults/{{ &defaultImg }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" style="object-fit: cover; object-position: center;" />
 										</a>
 										{{ /img }}
 										{{ #isPinned }}
