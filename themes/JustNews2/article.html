@@ -25,6 +25,288 @@
 		<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/wpcom-cn/assets/fonts/icons-2.6.4.js?ver=6.1.2' id='wpcom-icons-js'></script>
 		<link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.3.2/styles/tomorrow-night-bright.min.css">
 		<script src='https://cdn.staticfile.org/highlight.js/10.3.2/highlight.min.js'></script>
+		<style>
+			/* 黑夜模式切换按钮样式 */
+			.dark-mode-btn {
+				background: transparent;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				padding: 8px 10px;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s ease;
+				margin-right: 10px;
+			}
+
+			.dark-mode-btn:hover {
+				background: #f5f5f5;
+				border-color: #ccc;
+			}
+
+			.dark-mode-btn svg {
+				display: block;
+			}
+
+			.dark-mode-btn .moon-icon {
+				display: none;
+			}
+
+			/* 黑夜模式激活时的按钮样式 */
+			body.dark-mode .dark-mode-btn {
+				border-color: #444;
+			}
+
+			body.dark-mode .dark-mode-btn:hover {
+				background: #2a2a2a;
+				border-color: #555;
+			}
+
+			body.dark-mode .dark-mode-btn .sun-icon {
+				display: none;
+			}
+
+			body.dark-mode .dark-mode-btn .moon-icon {
+				display: block;
+			}
+
+			/* 黑夜模式主题颜色变量 */
+			body.dark-mode {
+				--bg-primary: #1a1a1a;
+				--bg-secondary: #2d2d2d;
+				--bg-tertiary: #3a3a3a;
+				--text-primary: #e4e4e4;
+				--text-secondary: #b8b8b8;
+				--text-muted: #888;
+				--border-color: #444;
+				--link-color: #6ab0f3;
+				--link-hover: #89c4f4;
+			}
+
+			/* 黑夜模式全局样式 */
+			body.dark-mode {
+				background-color: var(--bg-primary);
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .header {
+				background-color: var(--bg-secondary);
+				border-bottom: 1px solid var(--border-color);
+			}
+
+			body.dark-mode .footer {
+				background-color: var(--bg-secondary);
+				border-top: 1px solid var(--border-color);
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode .main,
+			body.dark-mode .sidebar {
+				background-color: var(--bg-primary);
+			}
+
+			body.dark-mode .post,
+			body.dark-mode .widget {
+				background-color: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .entry-content,
+			body.dark-mode .entry-title,
+			body.dark-mode .widget-title,
+			body.dark-mode .entry-info {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .entry-content p,
+			body.dark-mode .entry-content li,
+			body.dark-mode .entry-content span {
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode a {
+				color: var(--link-color);
+			}
+
+			body.dark-mode a:hover {
+				color: var(--link-hover);
+			}
+
+			body.dark-mode .navbar-nav > li > a {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .navbar-nav > li > a:hover {
+				color: var(--link-color);
+			}
+
+			body.dark-mode .entry-page-prev,
+			body.dark-mode .entry-page-next {
+				background-color: var(--bg-tertiary) !important;
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .entry-page-info {
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode .item-content .item-title a,
+			body.dark-mode .cat-item a,
+			body.dark-mode .tagcloud a {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .item-content .item-date {
+				color: var(--text-muted);
+			}
+
+			body.dark-mode code,
+			body.dark-mode pre {
+				background-color: var(--bg-tertiary);
+				border-color: var(--border-color);
+				color: var(--text-primary);
+			}
+
+			body.dark-mode blockquote {
+				background-color: var(--bg-tertiary);
+				border-left-color: var(--border-color);
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode .action {
+				background-color: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .action-item-icon {
+				color: var(--text-primary);
+			}
+
+			/* 平滑过渡效果 */
+			body,
+			.header,
+			.footer,
+			.main,
+			.sidebar,
+			.post,
+			.widget,
+			a,
+			.dark-mode-btn {
+				transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+			}
+
+			/* 文章目录 TOC 样式 */
+			.article-toc-container {
+				position: fixed;
+				top: 120px;
+				right: 20px;
+				width: 260px;
+				max-height: calc(100vh - 160px);
+				overflow-y: auto;
+				background: #fff;
+				border: 1px solid #e5e5e5;
+				border-radius: 8px;
+				padding: 20px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+				z-index: 100;
+			}
+
+			.article-toc-title {
+				font-size: 16px;
+				font-weight: 600;
+				margin: 0 0 15px 0;
+				padding-bottom: 10px;
+				border-bottom: 2px solid #f0f0f0;
+				color: #333;
+			}
+
+			.article-toc-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.article-toc-list li {
+				margin: 0;
+				padding: 0;
+				line-height: 1.8;
+			}
+
+			.article-toc-list a {
+				display: block;
+				padding: 4px 0;
+				color: #666;
+				text-decoration: none;
+				font-size: 14px;
+				transition: all 0.2s;
+				border-left: 2px solid transparent;
+				padding-left: 10px;
+			}
+
+			.article-toc-list a:hover {
+				color: #409eff;
+				border-left-color: #409eff;
+				padding-left: 12px;
+			}
+
+			.article-toc-list .toc-h3 a {
+				padding-left: 20px;
+				font-size: 13px;
+			}
+
+			.article-toc-list .toc-h4 a {
+				padding-left: 30px;
+				font-size: 12px;
+			}
+
+			.article-toc-list .toc-h5 a,
+			.article-toc-list .toc-h6 a {
+				padding-left: 40px;
+				font-size: 12px;
+			}
+
+			/* 黑夜模式下的 TOC 样式 */
+			body.dark-mode .article-toc-container {
+				background-color: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .article-toc-title {
+				color: var(--text-primary);
+				border-bottom-color: var(--border-color);
+			}
+
+			body.dark-mode .article-toc-list a {
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode .article-toc-list a:hover {
+				color: var(--link-color);
+				border-left-color: var(--link-color);
+			}
+
+			/* 响应式：小屏幕隐藏 TOC */
+			@media (max-width: 1400px) {
+				.article-toc-container {
+					display: none;
+				}
+			}
+
+			/* 自定义滚动条 */
+			.article-toc-container::-webkit-scrollbar {
+				width: 6px;
+			}
+
+			.article-toc-container::-webkit-scrollbar-thumb {
+				background: #ddd;
+				border-radius: 3px;
+			}
+
+			body.dark-mode .article-toc-container::-webkit-scrollbar-thumb {
+				background: #555;
+			}
+		</style>
 		{{ &OPT.codeBeforHead }}
 	</head>
 	<body class="archive paged category category-zhishi category-5 paged-2 category-paged-2 lang-cn el-boxed">
@@ -48,13 +330,29 @@
 				</div>
 				<div class="collapse navbar-collapse">
 					<nav class="navbar-left primary-menu">
-						<ul id="menu-%e5%af%bc%e8%88%aa" class="nav navbar-nav wpcom-adv-menu">
+						<ul id="menu-%e5%af%导%e8%88%aa" class="nav navbar-nav wpcom-adv-menu">
 							{{ #widgetMenuList }}
 								<li class="menu-item"><a href="{{ &url }}">{{ &title }}</a></li>
 							{{ /widgetMenuList }}
 						</ul>
 					</nav>
 					<div class="navbar-action pull-right">
+						<button type="button" id="dark-mode-toggle" class="dark-mode-btn" aria-label="切换黑夜模式" title="切换黑夜模式">
+							<svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="5"></circle>
+								<line x1="12" y1="1" x2="12" y2="3"></line>
+								<line x1="12" y1="21" x2="12" y2="23"></line>
+								<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+								<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+								<line x1="1" y1="12" x2="3" y2="12"></line>
+								<line x1="21" y1="12" x2="23" y2="12"></line>
+								<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+								<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+							</svg>
+							<svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+							</svg>
+						</button>
 						<div id="j-user-wrap">
 							<a class="login cur" href="/admin">登录</a>
 						</div>
@@ -202,6 +500,13 @@
 				</aside>
 			</div>
 		</div>
+
+		<!-- 文章目录 TOC -->
+		<div class="article-toc-container">
+			<div class="article-toc-title">📑 文章目录</div>
+			<ul class="article-toc-list" id="article-toc"></ul>
+		</div>
+
 		<footer class="footer">
 			<div class="container">
 				<div class="clearfix">
@@ -272,6 +577,110 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 			</script>
 <script>hljs.initHighlightingOnLoad(); //代码高亮
 					</script>
+		<script id="article-toc-generator">
+			// 文章目录生成器
+			(function() {
+				// 等待 DOM 加载完成
+				if (document.readyState === 'loading') {
+					document.addEventListener('DOMContentLoaded', initTOC);
+				} else {
+					initTOC();
+				}
+
+				function initTOC() {
+					const tocContainer = document.getElementById('article-toc');
+					const entryContent = document.querySelector('.entry-content');
+
+					if (!tocContainer || !entryContent) {
+						// 如果没有内容区域，隐藏 TOC
+						const tocWrapper = document.querySelector('.article-toc-container');
+						if (tocWrapper) {
+							tocWrapper.style.display = 'none';
+						}
+						return;
+					}
+
+					// 获取所有标题
+					const headings = entryContent.querySelectorAll('h2, h3, h4, h5, h6');
+
+					if (headings.length === 0) {
+						// 如果没有标题，隐藏 TOC
+						const tocWrapper = document.querySelector('.article-toc-container');
+						if (tocWrapper) {
+							tocWrapper.style.display = 'none';
+						}
+						return;
+					}
+
+					// 为每个标题添加 ID（如果没有）
+					headings.forEach(function(heading, index) {
+						if (!heading.id) {
+							heading.id = 'heading-' + index;
+						}
+					});
+
+					// 生成 TOC 列表
+					let tocHTML = '';
+					headings.forEach(function(heading) {
+						const level = heading.tagName.toLowerCase();
+						const text = heading.textContent.trim();
+						const id = heading.id;
+
+						tocHTML += '<li class="toc-' + level + '">';
+						tocHTML += '<a href="#' + id + '">' + text + '</a>';
+						tocHTML += '</li>';
+					});
+
+					tocContainer.innerHTML = tocHTML;
+
+					// 添加平滑滚动
+					const tocLinks = tocContainer.querySelectorAll('a');
+					tocLinks.forEach(function(link) {
+						link.addEventListener('click', function(e) {
+							e.preventDefault();
+							const targetId = this.getAttribute('href').substring(1);
+							const targetElement = document.getElementById(targetId);
+
+							if (targetElement) {
+								const headerOffset = 100;
+								const elementPosition = targetElement.getBoundingClientRect().top;
+								const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+								window.scrollTo({
+									top: offsetPosition,
+									behavior: 'smooth'
+								});
+							}
+						});
+					});
+				}
+			})();
+		</script>
+		<script id="dark-mode-toggle-script">
+			// 黑夜模式切换功能
+			(function() {
+				// 页面加载时检查并应用保存的主题
+				const savedTheme = localStorage.getItem('theme');
+				if (savedTheme === 'dark') {
+					document.body.classList.add('dark-mode');
+				}
+
+				// 切换按钮点击事件
+				const toggleBtn = document.getElementById('dark-mode-toggle');
+				if (toggleBtn) {
+					toggleBtn.addEventListener('click', function() {
+						document.body.classList.toggle('dark-mode');
+
+						// 保存用户偏好到 localStorage
+						if (document.body.classList.contains('dark-mode')) {
+							localStorage.setItem('theme', 'dark');
+						} else {
+							localStorage.setItem('theme', 'light');
+						}
+					});
+				}
+			})();
+		</script>
 		{{ &OPT.codeBeforBody }}
 	</body>
 
