@@ -322,6 +322,7 @@
 			}
 
 			.password-protection-box {
+				position: relative;
 				background: #fff;
 				border-radius: 8px;
 				padding: 40px;
@@ -333,6 +334,34 @@
 			body.dark-mode .password-protection-box {
 				background: var(--bg-secondary);
 				color: var(--text-primary);
+			}
+
+			.password-protection-close {
+				position: absolute;
+				top: 15px;
+				right: 15px;
+				width: 30px;
+				height: 30px;
+				border: none;
+				background: transparent;
+				font-size: 24px;
+				color: #999;
+				cursor: pointer;
+				line-height: 1;
+				padding: 0;
+				transition: color 0.3s ease;
+			}
+
+			.password-protection-close:hover {
+				color: #333;
+			}
+
+			body.dark-mode .password-protection-close {
+				color: #666;
+			}
+
+			body.dark-mode .password-protection-close:hover {
+				color: #999;
 			}
 
 			.password-protection-title {
@@ -445,6 +474,18 @@
 			body.dark-mode .password-protected-placeholder .message {
 				color: var(--text-secondary);
 			}
+
+			/* 加密文章徽章样式 */
+			.encrypted-badge {
+				display: inline-block;
+				color: #f59e0b;
+				font-size: 0.9em;
+				margin-right: 6px;
+			}
+
+			body.dark-mode .encrypted-badge {
+				color: #fbbf24;
+			}
 		</style>
 		{{ &OPT.codeBeforHead }}
 	</head>
@@ -511,6 +552,9 @@
 									{{ #articleSingle.isPinned }}
 										<span style="color: #f59e0b; font-size: 0.9em; margin-right: 10px;">📌 置顶</span>
 									{{ /articleSingle.isPinned }}
+									{{ #articleSingle.isPasswordProtected }}
+										<span class="encrypted-badge">🔒</span>
+									{{ /articleSingle.isPasswordProtected }}
 									{{ &articleSingle.title }}
 								</h1>
 								<div class="entry-info">
@@ -837,6 +881,7 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 		{{ #articleSingle.isPasswordProtected }}
 		<div class="password-protection-overlay" id="password-overlay">
 			<div class="password-protection-box">
+				<button type="button" class="password-protection-close" id="password-close-btn" title="关闭">×</button>
 				<div class="password-protection-title">🔐 请输入密码</div>
 				{{ #articleSingle.passwordHint }}
 					<div class="password-protection-hint">{{ &articleSingle.passwordHint }}</div>
@@ -860,8 +905,23 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 				const submitBtn = document.getElementById('password-submit-btn');
 				const errorMessage = document.getElementById('password-error-message');
 				const overlay = document.getElementById('password-overlay');
+				const closeBtn = document.getElementById('password-close-btn');
 
 				if (!overlay) return; // 非密码保护文章，不执行
+
+				// 关闭按钮功能
+				if (closeBtn) {
+					closeBtn.addEventListener('click', function() {
+						overlay.style.display = 'none';
+					});
+				}
+
+				// 点击背景关闭弹窗
+				overlay.addEventListener('click', function(e) {
+					if (e.target === overlay) {
+						overlay.style.display = 'none';
+					}
+				});
 
 				// 回车键提交
 				passwordInput.addEventListener('keypress', function(e) {
