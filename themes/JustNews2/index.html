@@ -176,6 +176,18 @@
 			.dark-mode-btn {
 				transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 			}
+
+			/* 加密文章徽章样式 */
+			.encrypted-badge {
+				display: inline-block;
+				color: #f59e0b;
+				font-size: 0.9em;
+				margin-right: 6px;
+			}
+
+			body.dark-mode .encrypted-badge {
+				color: #fbbf24;
+			}
 		</style>
 
 		{{ &OPT.codeBeforHead }}
@@ -266,6 +278,9 @@
 												{{ #isPinned }}
 													<span style="color: #f59e0b; margin-right: 6px;">📌 置顶</span>
 												{{ /isPinned }}
+												{{ #isPasswordProtected }}
+													<span class="encrypted-badge">🔒</span>
+												{{ /isPasswordProtected }}
 												{{ &title }}
 											</a></h2>
 										<div class="item-excerpt">
@@ -345,7 +360,12 @@
 								</div>
 								<div class="item-content">
 									<p class="item-title">
-										<a href="{{ &url }}" title="{{ &title }}">{{ &title }}</a></p>
+										<a href="{{ &url }}" title="{{ &title }}">
+											{{ #isPasswordProtected }}
+												<span class="encrypted-badge">🔒</span>
+											{{ /isPasswordProtected }}
+											{{ &title }}
+										</a></p>
 									<p class="item-date">{{ &createDate10 }}</p></div>
 							</li>
 							{{ /widgetRecentlyList }}									
