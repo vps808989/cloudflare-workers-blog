@@ -354,7 +354,10 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="img">特色图片</label>
-						<input type="url" class="form-control" name="img" id="img" placeholder="https://example.com/image.jpg">
+						<div style="display: flex; gap: 8px;">
+							<input type="url" class="form-control" name="img" id="img" placeholder="https://example.com/image.jpg" style="flex: 1;">
+							<button type="button" class="btn btn-primary" onclick="uploadFeaturedImage()" style="white-space: nowrap;">📤 上传到 R2</button>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-6">
@@ -420,6 +423,7 @@
 				<button type="button" id="btn_saveEdit" class="btn btn-primary" onclick="saveEdit()">💾 保存文章</button>
 				<button type="button" class="btn btn-success" onclick="publish()">🚀 保存并发布</button>
 				<button type="button" id="btn_delete" class="btn btn-warning" onclick="deleteArticle()">🗑️ 删除文章</button>
+				<button type="button" class="btn btn-info" onclick="insertImageToEditor()">📷 插入图片</button>
 				<a href="/admin/" class="btn btn-default">❌ 取消编辑</a>
 			</div>
 
@@ -555,6 +559,122 @@
 				}
 			}
 		});
+	}
+
+	// ========== R2 图片上传功能 ==========
+	// 上传特色图片到 R2
+	function uploadFeaturedImage(){
+		var input = document.createElement('input');
+		input.type = 'file';
+		input.accept = 'image/jpeg,image/png,image/gif,image/webp';
+		input.onchange = function(e){
+			var file = e.target.files[0];
+			if(!file){
+				return;
+			}
+
+			// 验证文件类型
+			var allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+			if(!allowedTypes.includes(file.type)){
+				alert('不支持的文件类型！仅支持 JPG、PNG、GIF、WebP');
+				return;
+			}
+
+			// 验证文件大小 (5 MB)
+			if(file.size > 5 * 1024 * 1024){
+				alert('文件过大！最大支持 5 MB');
+				return;
+			}
+
+			// 上传文件
+			var formData = new FormData();
+			formData.append('file', file);
+
+			// 显示上传中
+			var btn = event.target;
+			var originalText = btn.textContent;
+			btn.disabled = true;
+			btn.textContent = '上传中...';
+
+			$.ajax({
+				type: "POST",
+				url: "/admin/uploadImage",
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(result){
+					btn.disabled = false;
+					btn.textContent = originalText;
+
+					if(result.success){
+						$('#img').val(result.url);
+						alert('上传成功！URL 已自动填入');
+					} else {
+						alert('上传失败：' + result.error);
+					}
+				},
+				error: function(xhr, status, error){
+					btn.disabled = false;
+					btn.textContent = originalText;
+					alert('上传失败：' + error);
+				}
+			});
+		};
+		input.click();
+	}
+
+	// 插入图片到编辑器
+	function insertImageToEditor(){
+		var input = document.createElement('input');
+		input.type = 'file';
+		input.accept = 'image/jpeg,image/png,image/gif,image/webp';
+		input.onchange = function(e){
+			var file = e.target.files[0];
+			if(!file){
+				return;
+			}
+
+			// 验证文件类型
+			var allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+			if(!allowedTypes.includes(file.type)){
+				alert('不支持的文件类型！仅支持 JPG、PNG、GIF、WebP');
+				return;
+			}
+
+			// 验证文件大小 (5 MB)
+			if(file.size > 5 * 1024 * 1024){
+				alert('文件过大！最大支持 5 MB');
+				return;
+			}
+
+			// 上传文件
+			var formData = new FormData();
+			formData.append('file', file);
+
+			$.ajax({
+				type: "POST",
+				url: "/admin/uploadImage",
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(result){
+					if(result.success){
+						// 插入 Markdown 图片语法到编辑器
+						var imageMarkdown = '![' + file.name + '](' + result.url + ')';
+						mdEditor.insertValue(imageMarkdown);
+						alert('图片已插入编辑器');
+					} else {
+						alert('上传失败：' + result.error);
+					}
+				},
+				error: function(xhr, status, error){
+					alert('上传失败：' + error);
+				}
+			});
+		};
+		input.click();
 	}
 </script>
 
