@@ -93,13 +93,13 @@
 								{{ &articleSingle.contentHtml }}
 							</div>
 							<div class="entry-footer">
-								{{ #articleSingle.tags }}
+								{{ #articleSingle.tags.0 }}
 								<div class="entry-tag">
 									{{ #articleSingle.tags }}
 										<a href="/tags/{{&.}}" rel="tag">{{&.}}</a>
 									{{ /articleSingle.tags }}
 								</div>
-								{{ /articleSingle.tags }}
+								{{ /articleSingle.tags.0 }}
 
 								<div class="entry-page">
 
@@ -154,7 +154,7 @@
 										<img width="480" height="264" src="{{ &img }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="" title="" data-original="{{ &img }}" /></a>
 									{{ /img }}
 									{{ ^img }}
-									<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" style="display: block; width: 480px; height: 264px;">
+									<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}">
 										<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
 									</a>
 									{{ /img }}
@@ -177,7 +177,7 @@
 							{{ /widgetCategoryList }}
 						</ul>
 					</div>
-					{{ #widgetTagsList }}
+					{{ #widgetTagsList.0 }}
 					<div id="tag_cloud-3" class="widget widget_tag_cloud">
 						<h3 class="widget-title">
 							<span>标签</span></h3>
@@ -187,7 +187,7 @@
 							{{ /widgetTagsList }}
 						</div>
 					</div>
-					{{ /widgetTagsList }}
+					{{ /widgetTagsList.0 }}
 
 					<div id="linkcat-0" class="widget widget_links">
 						<h3 class="widget-title">
