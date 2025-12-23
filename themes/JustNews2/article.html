@@ -306,6 +306,145 @@
 			body.dark-mode .article-toc-container::-webkit-scrollbar-thumb {
 				background: #555;
 			}
+
+			/* 文章密码保护样式 */
+			.password-protection-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.6);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999;
+			}
+
+			.password-protection-box {
+				background: #fff;
+				border-radius: 8px;
+				padding: 40px;
+				max-width: 450px;
+				width: 90%;
+				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+			}
+
+			body.dark-mode .password-protection-box {
+				background: var(--bg-secondary);
+				color: var(--text-primary);
+			}
+
+			.password-protection-title {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 10px;
+				text-align: center;
+				color: #333;
+			}
+
+			body.dark-mode .password-protection-title {
+				color: var(--text-primary);
+			}
+
+			.password-protection-hint {
+				text-align: center;
+				color: #666;
+				margin-bottom: 25px;
+				font-size: 14px;
+			}
+
+			body.dark-mode .password-protection-hint {
+				color: var(--text-secondary);
+			}
+
+			.password-input-group {
+				margin-bottom: 20px;
+			}
+
+			.password-input-group input {
+				width: 100%;
+				padding: 12px 15px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				font-size: 16px;
+				box-sizing: border-box;
+			}
+
+			body.dark-mode .password-input-group input {
+				background: var(--bg-tertiary);
+				border-color: var(--border-color);
+				color: var(--text-primary);
+			}
+
+			.password-input-group input:focus {
+				outline: none;
+				border-color: #3498db;
+			}
+
+			.password-submit-btn {
+				width: 100%;
+				padding: 12px;
+				background: #3498db;
+				color: #fff;
+				border: none;
+				border-radius: 4px;
+				font-size: 16px;
+				font-weight: bold;
+				cursor: pointer;
+				transition: background 0.3s ease;
+			}
+
+			.password-submit-btn:hover {
+				background: #2980b9;
+			}
+
+			.password-submit-btn:disabled {
+				background: #ccc;
+				cursor: not-allowed;
+			}
+
+			.password-error-message {
+				color: #e74c3c;
+				margin-top: 10px;
+				text-align: center;
+				font-size: 14px;
+				display: none;
+			}
+
+			body.dark-mode .password-error-message {
+				color: #ff6b6b;
+			}
+
+			.password-protected-placeholder {
+				background: #f8f9fa;
+				border: 2px dashed #ddd;
+				border-radius: 8px;
+				padding: 60px 30px;
+				text-align: center;
+				margin: 40px 0;
+			}
+
+			body.dark-mode .password-protected-placeholder {
+				background: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			.password-protected-placeholder .lock-icon {
+				font-size: 60px;
+				color: #bbb;
+				margin-bottom: 20px;
+			}
+
+			.password-protected-placeholder .message {
+				font-size: 18px;
+				color: #666;
+				margin-bottom: 10px;
+			}
+
+			body.dark-mode .password-protected-placeholder .message {
+				color: var(--text-secondary);
+			}
 		</style>
 		{{ &OPT.codeBeforHead }}
 	</head>
@@ -388,7 +527,19 @@
 								</div>
 							</div>
 							<div class="entry-content">
-								{{ &articleSingle.contentHtml }}
+								{{ #articleSingle.isPasswordProtected }}
+									<!-- 密码保护占位符 -->
+									<div class="password-protected-placeholder">
+										<div class="lock-icon">🔒</div>
+										<div class="message">此文章受密码保护</div>
+										{{ #articleSingle.passwordHint }}
+											<div class="hint">{{ &articleSingle.passwordHint }}</div>
+										{{ /articleSingle.passwordHint }}
+									</div>
+								{{ /articleSingle.isPasswordProtected }}
+								{{ ^articleSingle.isPasswordProtected }}
+									{{ &articleSingle.contentHtml }}
+								{{ /articleSingle.isPasswordProtected }}
 							</div>
 							<div class="entry-footer">
 								{{ #articleSingle.tags.0 }}
@@ -681,6 +832,109 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 				}
 			})();
 		</script>
+
+		<!-- 文章密码保护弹窗 -->
+		{{ #articleSingle.isPasswordProtected }}
+		<div class="password-protection-overlay" id="password-overlay">
+			<div class="password-protection-box">
+				<div class="password-protection-title">🔐 请输入密码</div>
+				{{ #articleSingle.passwordHint }}
+					<div class="password-protection-hint">{{ &articleSingle.passwordHint }}</div>
+				{{ /articleSingle.passwordHint }}
+				{{ ^articleSingle.passwordHint }}
+					<div class="password-protection-hint">此文章受密码保护，请输入密码查看</div>
+				{{ /articleSingle.passwordHint }}
+				<div class="password-input-group">
+					<input type="password" id="article-password-input" placeholder="请输入文章密码" autocomplete="off">
+				</div>
+				<button type="button" class="password-submit-btn" id="password-submit-btn">解锁文章</button>
+				<div class="password-error-message" id="password-error-message"></div>
+			</div>
+		</div>
+
+		<script id="password-protection-script">
+			// 文章密码验证功能
+			(function() {
+				const articleId = '{{ &articleSingle.id }}';
+				const passwordInput = document.getElementById('article-password-input');
+				const submitBtn = document.getElementById('password-submit-btn');
+				const errorMessage = document.getElementById('password-error-message');
+				const overlay = document.getElementById('password-overlay');
+
+				if (!overlay) return; // 非密码保护文章，不执行
+
+				// 回车键提交
+				passwordInput.addEventListener('keypress', function(e) {
+					if (e.key === 'Enter') {
+						submitPassword();
+					}
+				});
+
+				// 点击按钮提交
+				submitBtn.addEventListener('click', submitPassword);
+
+				async function submitPassword() {
+					const password = passwordInput.value.trim();
+
+					if (!password) {
+						showError('请输入密码');
+						return;
+					}
+
+					// 禁用按钮，显示加载状态
+					submitBtn.disabled = true;
+					submitBtn.textContent = '验证中...';
+					errorMessage.style.display = 'none';
+
+					try {
+						// 调用密码验证 API
+						const response = await fetch('/api/verify-password', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								articleId: articleId,
+								password: password
+							})
+						});
+
+						const result = await response.json();
+
+						if (result.success) {
+							// 密码正确，刷新页面显示完整内容
+							// 可以通过 token 存储到 localStorage 实现无需重复输入
+							localStorage.setItem('article_' + articleId + '_token', result.token);
+							location.reload();
+						} else {
+							// 密码错误
+							showError(result.error || '密码错误，请重试');
+							passwordInput.value = '';
+							passwordInput.focus();
+						}
+					} catch (error) {
+						showError('验证失败，请稍后重试');
+						console.error('Password verification error:', error);
+					} finally {
+						// 恢复按钮状态
+						submitBtn.disabled = false;
+						submitBtn.textContent = '解锁文章';
+					}
+				}
+
+				function showError(message) {
+					errorMessage.textContent = message;
+					errorMessage.style.display = 'block';
+				}
+
+				// 自动聚焦密码输入框
+				setTimeout(function() {
+					passwordInput.focus();
+				}, 100);
+			})();
+		</script>
+		{{ /articleSingle.isPasswordProtected }}
+
 		{{ &OPT.codeBeforBody }}
 	</body>
 
