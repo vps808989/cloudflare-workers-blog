@@ -23,6 +23,160 @@
 		<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js?ver=3.5.1' id='jquery-core-js'></script>
 		<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/WordPress/WordPress@5.6/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
 		<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/wpcom-cn/assets/fonts/icons-2.6.4.js?ver=6.1.2' id='wpcom-icons-js'></script>
+		<style>
+			/* 黑夜模式切换按钮样式 */
+			.dark-mode-btn {
+				background: transparent;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				padding: 8px 10px;
+				cursor: pointer;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.3s ease;
+				margin-right: 10px;
+			}
+
+			.dark-mode-btn:hover {
+				background: #f5f5f5;
+				border-color: #ccc;
+			}
+
+			.dark-mode-btn svg {
+				display: block;
+			}
+
+			.dark-mode-btn .moon-icon {
+				display: none;
+			}
+
+			/* 黑夜模式激活时的按钮样式 */
+			body.dark-mode .dark-mode-btn {
+				border-color: #444;
+			}
+
+			body.dark-mode .dark-mode-btn:hover {
+				background: #2a2a2a;
+				border-color: #555;
+			}
+
+			body.dark-mode .dark-mode-btn .sun-icon {
+				display: none;
+			}
+
+			body.dark-mode .dark-mode-btn .moon-icon {
+				display: block;
+			}
+
+			/* 黑夜模式主题颜色变量 */
+			body.dark-mode {
+				--bg-primary: #1a1a1a;
+				--bg-secondary: #2d2d2d;
+				--bg-tertiary: #3a3a3a;
+				--text-primary: #e4e4e4;
+				--text-secondary: #b8b8b8;
+				--text-muted: #888;
+				--border-color: #444;
+				--link-color: #6ab0f3;
+				--link-hover: #89c4f4;
+			}
+
+			/* 黑夜模式全局样式 */
+			body.dark-mode {
+				background-color: var(--bg-primary);
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .header {
+				background-color: var(--bg-secondary);
+				border-bottom: 1px solid var(--border-color);
+			}
+
+			body.dark-mode .footer {
+				background-color: var(--bg-secondary);
+				border-top: 1px solid var(--border-color);
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode .main,
+			body.dark-mode .sidebar {
+				background-color: var(--bg-primary);
+			}
+
+			body.dark-mode .post-loop .item,
+			body.dark-mode .widget,
+			body.dark-mode .sec-panel {
+				background-color: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .item-content .item-title a,
+			body.dark-mode .widget-title,
+			body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .item-excerpt,
+			body.dark-mode .item-meta,
+			body.dark-mode p {
+				color: var(--text-secondary);
+			}
+
+			body.dark-mode a {
+				color: var(--link-color);
+			}
+
+			body.dark-mode a:hover {
+				color: var(--link-hover);
+			}
+
+			body.dark-mode .navbar-nav > li > a {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .navbar-nav > li > a:hover {
+				color: var(--link-color);
+			}
+
+			body.dark-mode .cat-item a,
+			body.dark-mode .tagcloud a {
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .item-content .item-date {
+				color: var(--text-muted);
+			}
+
+			body.dark-mode .pagination a,
+			body.dark-mode .pagination span {
+				background-color: var(--bg-tertiary);
+				border-color: var(--border-color);
+				color: var(--text-primary);
+			}
+
+			body.dark-mode .action {
+				background-color: var(--bg-secondary);
+				border-color: var(--border-color);
+			}
+
+			body.dark-mode .action-item-icon {
+				color: var(--text-primary);
+			}
+
+			/* 平滑过渡效果 */
+			body,
+			.header,
+			.footer,
+			.main,
+			.sidebar,
+			.post-loop .item,
+			.widget,
+			a,
+			.dark-mode-btn {
+				transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+			}
+		</style>
 
 		{{ &OPT.codeBeforHead }}
 	</head>
@@ -54,6 +208,22 @@
 						</ul>
 					</nav>
 					<div class="navbar-action pull-right">
+						<button type="button" id="dark-mode-toggle" class="dark-mode-btn" aria-label="切换黑夜模式" title="切换黑夜模式">
+							<svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="12" r="5"></circle>
+								<line x1="12" y1="1" x2="12" y2="3"></line>
+								<line x1="12" y1="21" x2="12" y2="23"></line>
+								<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+								<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+								<line x1="1" y1="12" x2="3" y2="12"></line>
+								<line x1="21" y1="12" x2="23" y2="12"></line>
+								<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+								<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+							</svg>
+							<svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+							</svg>
+						</button>
 						<div id="j-user-wrap">
 							<a class="login cur" href="/admin">登录</a>
 						</div>
@@ -348,6 +518,31 @@
 					}
 				});
 			})(jQuery);</script>
+		<script id="dark-mode-toggle-script">
+			// 黑夜模式切换功能
+			(function() {
+				// 页面加载时检查并应用保存的主题
+				const savedTheme = localStorage.getItem('theme');
+				if (savedTheme === 'dark') {
+					document.body.classList.add('dark-mode');
+				}
+
+				// 切换按钮点击事件
+				const toggleBtn = document.getElementById('dark-mode-toggle');
+				if (toggleBtn) {
+					toggleBtn.addEventListener('click', function() {
+						document.body.classList.toggle('dark-mode');
+
+						// 保存用户偏好到 localStorage
+						if (document.body.classList.contains('dark-mode')) {
+							localStorage.setItem('theme', 'dark');
+						} else {
+							localStorage.setItem('theme', 'light');
+						}
+					});
+				}
+			})();
+		</script>
 		{{ &OPT.codeBeforBody }}
 	</body>
 
