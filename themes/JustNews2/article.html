@@ -403,19 +403,7 @@
 								</div>
 							</div>
 							<div class="entry-content">
-								{{ #articleSingle.isPasswordProtected }}
-									<!-- 密码保护占位符 -->
-									<div class="password-protected-placeholder">
-										<div class="lock-icon">🔒</div>
-										<div class="message">此文章受密码保护</div>
-										{{ #articleSingle.passwordHint }}
-											<div class="hint">{{ &articleSingle.passwordHint }}</div>
-										{{ /articleSingle.passwordHint }}
-									</div>
-								{{ /articleSingle.isPasswordProtected }}
-								{{ ^articleSingle.isPasswordProtected }}
-									{{ &articleSingle.contentHtml }}
-								{{ /articleSingle.isPasswordProtected }}
+								{{ &articleSingle.contentHtml }}
 							</div>
 							<div class="entry-footer">
 								{{ #articleSingle.tags.0 }}
