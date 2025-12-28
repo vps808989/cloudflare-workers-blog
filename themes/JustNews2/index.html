@@ -264,33 +264,16 @@
 										{{ /img }}
 										{{ ^img }}
 										<a class="item-img-inner" href="{{ &url }}" title="{{ &title }}" rel="bookmark">
-											<img width="437" height="300" src="https://cdn.jsdelivr.net/gh/vps808989/cloudflare-workers-blog-master/themes/JustNews2/images/defaults/{{ &defaultImg }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" style="object-fit: cover; object-position: center;" />
+											<img width="437" height="300" src="https://cdn.jsdelivr.net/gh/vps808989/cloudflare-workers-blog@master/themes/JustNews2/images/defaults/{{ &defaultImg }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image j-lazy" alt="{{ &title }}" title="{{ &title }}" style="object-fit: cover; object-position: center;" />
 										</a>
 										{{ /img }}
-
-										{{!-- 商品价格标签 --}}
-										{{ #isProduct }}
-											<div style="position: absolute; bottom: 10px; right: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 8px 15px; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-												<span style="font-size: 12px; opacity: 0.9;">¥</span>
-												<span style="font-size: 18px;">{{ &productPrice }}</span>
-											</div>
-										{{ /isProduct }}
-
 										{{ #isPinned }}
 											<span class="item-category" style="position: absolute; top: 10px; left: 10px; background: #f59e0b;">📌 置顶</span>
 										{{ /isPinned }}
 										{{ ^isPinned }}
-											{{!-- 商品类型标签优先显示 --}}
-											{{ #isProduct }}
-												<span class="item-category" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-													🛍️ {{ #eq_productType_virtual }}虚拟商品{{ /eq_productType_virtual }}{{ #eq_productType_physical }}实物商品{{ /eq_productType_physical }}
-												</span>
-											{{ /isProduct }}
-											{{ ^isProduct }}
-												{{ #category.0 }}
-													<a class="item-category" style="position: absolute; top: 10px; left: 10px;" href="/category/{{&category.0}}" >{{&category.0}}</a>
-												{{ /category.0 }}
-											{{ /isProduct }}
+											{{ #category.0 }}
+												<a class="item-category" style="position: absolute; top: 10px; left: 10px;" href="/category/{{&category.0}}" >{{&category.0}}</a>
+											{{ /category.0 }}
 										{{ /isPinned }}
 
 									</div>
@@ -300,9 +283,6 @@
 												{{ #isPinned }}
 													<span style="color: #f59e0b; margin-right: 6px;">📌 置顶</span>
 												{{ /isPinned }}
-												{{ #isProduct }}
-													<span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-right: 6px; font-weight: 700;">🛍️</span>
-												{{ /isProduct }}
 												{{ #isPasswordProtected }}
 													<span class="encrypted-badge">🔒</span>
 												{{ /isPasswordProtected }}
@@ -311,28 +291,6 @@
 										<div class="item-excerpt">
 											<p>{{ &contentText }} ...</p>
 										</div>
-
-										{{!-- 商品信息额外显示 --}}
-										{{ #isProduct }}
-										<div class="product-info-meta" style="margin: 10px 0; padding: 10px; background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border-radius: 6px; border-left: 3px solid #667eea;">
-											<div style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 13px;">
-												<span style="display: flex; align-items: center; gap: 5px;">
-													<strong style="color: #e74c3c; font-size: 20px;">¥{{ &productPrice }}</strong>
-													{{ #productOriginalPrice }}
-													<span style="text-decoration: line-through; color: #999; font-size: 14px;">¥{{ &productOriginalPrice }}</span>
-													{{ /productOriginalPrice }}
-												</span>
-												<span style="display: flex; align-items: center; gap: 3px; color: #666;">
-													📊 库存：<strong style="color: {{ #gte_productStock_10 }}#27ae60{{ /gte_productStock_10 }}{{ #lt_productStock_10 }}#e74c3c{{ /lt_productStock_10 }};">{{ &productStock }}</strong> 件
-												</span>
-												<span style="display: flex; align-items: center; gap: 3px; color: #666;">
-													{{ #eq_productType_virtual }}💎 自动发货{{ /eq_productType_virtual }}
-													{{ #eq_productType_physical }}📦 需要物流{{ /eq_productType_physical }}
-												</span>
-											</div>
-										</div>
-										{{ /isProduct }}
-
 										<div class="item-meta">
 											<span class="item-meta-li date">{{ &createDate10 }}</span>
 											<div class="item-meta-right">
