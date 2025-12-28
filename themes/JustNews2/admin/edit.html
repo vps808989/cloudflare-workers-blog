@@ -535,9 +535,9 @@
 
 				<!-- 实物商品配置 -->
 				<div id="physicalProductSettings" style="display: none;">
-t		<div class="alert" style="background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; padding: 15px; border-radius: 6px;">
-				<strong>💡 提示：</strong>实物商品将在用户支付后显示为"待发货"状态，需要在后台手动填写物流信息。
-			</div>
+					<div class="alert" style="background: #e3f2fd; color: #1976d2; border: 1px solid #90caf9; padding: 15px; border-radius: 6px;">
+						<strong>💡 提示：</strong>实物商品将在用户支付后显示为"待发货"状态，需要在后台手动填写物流信息。
+					</div>
 				</div>
 
 				<!-- 自定义表单字段 -->
@@ -636,6 +636,8 @@ t		<div class="alert" style="background: #e3f2fd; color: #1976d2; border: 1px so
 			$('#productStatus').val(articleJson.productStatus || 'active');
 			$('#virtualContent').val(articleJson.virtualContent || '');
 			$('#virtualContentType').val(articleJson.virtualContentType || 'text');
+			$('#physicalWeight').val(articleJson.physicalWeight || '');
+			$('#physicalDimensions').val(articleJson.physicalDimensions || '');
 
 			// 触发内容类型切换以显示商品字段
 			toggleContentType();
