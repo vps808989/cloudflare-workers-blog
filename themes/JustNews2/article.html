@@ -857,12 +857,11 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 					// 收集表单数据
 					const formData = new FormData(form);
 					const orderData = {
-						product_id: formData.get('product_id'),
-						product_name: formData.get('product_name'),
+						productId: formData.get('product_id'),
 						quantity: parseInt(formData.get('quantity')),
-						contact_email: formData.get('contact_email'),
-						contact_phone: formData.get('contact_phone'),
-						custom_fields: {} // TODO: 收集自定义字段
+						contactEmail: formData.get('contact_email'),
+						contactPhone: formData.get('contact_phone'),
+						customFields: {} // TODO: 收集自定义字段
 					};
 
 					// 调用创建订单 API
@@ -878,9 +877,9 @@ var fifuImageVars = {"fifu_lazy":"1","fifu_woo_lbox_enabled":"1","fifu_woo_zoom"
 
 					if (result.success) {
 						// 跳转到支付页面
-						window.location.href = result.payment_url;
+						window.location.href = result.payUrl;
 					} else {
-						alert('创建订单失败：' + result.error);
+						alert('创建订单失败：' + (result.message || '未知错误'));
 						submitBtn.disabled = false;
 						submitBtn.textContent = originalText;
 					}
