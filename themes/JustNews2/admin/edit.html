@@ -434,13 +434,133 @@
 				</div>
 			</div>
 
-			<!-- 💰 付费阅读设置 -->
-			<div class="admin-card" style="margin-top: 20px;">
-				<h3>💰 付费阅读设置</h3>
+			<!-- 🛍️ 内容类型切换 -->
+			<div class="form-group" style="margin-bottom: 30px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: #fff;">
+				<label style="color: #fff; font-weight: 600; margin-bottom: 10px; display: block;">
+					📝 内容类型
+				</label>
+				<div style="display: flex; gap: 15px;">
+					<label class="content-type-option" style="flex: 1; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.3s;">
+						<input type="radio" name="isProduct" value="false" id="isProductFalse" checked style="display: none;" onchange="toggleContentType()">
+						<div style="font-size: 32px; margin-bottom: 8px;">📄</div>
+						<div style="font-weight: 600;">文章模式</div>
+						<small style="opacity: 0.9;">发布博客文章</small>
+					</label>
+					<label class="content-type-option" style="flex: 1; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.3s;">
+						<input type="radio" name="isProduct" value="true" id="isProductTrue" style="display: none;" onchange="toggleContentType()">
+						<div style="font-size: 32px; margin-bottom: 8px;">🛍️</div>
+						<div style="font-weight: 600;">商品模式</div>
+						<small style="opacity: 0.9;">发布商品销售</small>
+					</label>
+				</div>
+			</div>
+
+			<!-- 💰 付费阅读设置（仅文章模式）-->
+			<div id="articlePaidSettings" class="admin-card" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border: 1px solid #e9ecef;">
+				<h3 style="font-size: 16px; margin-bottom: 15px;">💰 付费阅读设置</h3>
 				<div class="form-group">
 					<label for="price">文章价格（元）</label>
 					<input type="number" step="0.01" min="0" class="form-control" name="price" id="price" placeholder="0.00（留空或0表示免费）" autocomplete="off">
 					<small class="text-muted">💡 设置后，访客需要支付才能查看整篇文章（注意：付费和密码保护不能同时使用）</small>
+				</div>
+			</div>
+
+			<!-- 🛍️ 商品设置（仅商品模式）-->
+			<div id="productSettings" class="admin-card" style="margin-top: 20px; padding: 20px; background: #fff3cd; border: 1px solid #ffc107; display: none;">
+				<h3 style="font-size: 16px; margin-bottom: 15px;">🛍️ 商品配置</h3>
+
+				<!-- 商品类型 -->
+				<div class="form-group">
+					<label for="productType">商品类型 *</label>
+					<select class="form-control" id="productType" name="productType" onchange="toggleProductType()">
+						<option value="virtual">💎 虚拟商品（自动发货）</option>
+						<option value="physical">📦 实物商品（需要物流）</option>
+					</select>
+				</div>
+
+				<!-- 商品价格 -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="productPrice">商品价格（元）*</label>
+							<input type="number" step="0.01" min="0.01" class="form-control" name="productPrice" id="productPrice" placeholder="9.90">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="productOriginalPrice">原价（元）</label>
+							<input type="number" step="0.01" min="0" class="form-control" name="productOriginalPrice" id="productOriginalPrice" placeholder="19.90（可选，显示折扣）">
+							<small class="text-muted">填写后会显示"原价 ¥19.90"</small>
+						</div>
+					</div>
+				</div>
+
+				<!-- 商品库存 -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="productStock">库存数量 *</label>
+							<input type="number" min="0" class="form-control" name="productStock" id="productStock" placeholder="100" value="999">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="productStatus">商品状态</label>
+							<select class="form-control" id="productStatus" name="productStatus">
+								<option value="active">✅ 上架销售</option>
+								<option value="inactive">❌ 下架</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- 虚拟商品内容 -->
+				<div id="virtualProductSettings" style="display: block;">
+					<div class="form-group">
+						<label for="virtualContent">虚拟商品内容 *（支付后自动发货）</label>
+						<textarea class="form-control" name="virtualContent" id="virtualContent" rows="4" placeholder="例如：激活码: XXXX-XXXX-XXXX&#10;下载链接: https://...&#10;使用说明: ..."></textarea>
+						<small class="text-muted">
+							💡 支持特殊标记：<code>{{AUTO_GENERATE_CODE}}</code> 自动生成8位激活码
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="virtualContentType">内容类型</label>
+						<select class="form-control" id="virtualContentType" name="virtualContentType">
+							<option value="text">📝 纯文本</option>
+							<option value="code">🔑 激活码</option>
+							<option value="file">📄 文件URL</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- 实物商品配置 -->
+				<div id="physicalProductSettings" style="display: none;">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="physicalWeight">商品重量（kg）</label>
+								<input type="number" step="0.01" min="0" class="form-control" name="physicalWeight" id="physicalWeight" placeholder="0.5">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="physicalDimensions">商品尺寸（cm）</label>
+								<input type="text" class="form-control" name="physicalDimensions" id="physicalDimensions" placeholder="10x8x2（长x宽x高）">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 自定义表单字段 -->
+				<div class="form-group">
+					<label>
+						自定义表单字段（用户购买时需要填写）
+						<button type="button" class="btn btn-sm btn-success" onclick="addCustomField()" style="margin-left: 10px;">➕ 添加字段</button>
+					</label>
+					<div id="customFieldsList" style="margin-top: 10px;">
+						<!-- 动态添加的自定义字段会显示在这里 -->
+					</div>
+					<small class="text-muted">例如：尺码、颜色、收货地址等</small>
 				</div>
 			</div>
 
@@ -515,6 +635,29 @@
 		$('#password').val(articleJson.password || '');
 		$('#passwordHint').val(articleJson.passwordHint || '');
 		$('#price').val(articleJson.price || '');
+
+		// 🛍️ 商品字段赋值
+		var isProduct = (articleJson.isProduct === true || articleJson.isProduct === 'true');
+		if (isProduct) {
+			$('#isProductTrue').prop('checked', true);
+			$('#productType').val(articleJson.productType || 'virtual');
+			$('#productPrice').val(articleJson.productPrice || '');
+			$('#productOriginalPrice').val(articleJson.productOriginalPrice || '');
+			$('#productStock').val(articleJson.productStock || 999);
+			$('#productStatus').val(articleJson.productStatus || 'active');
+			$('#virtualContent').val(articleJson.virtualContent || '');
+			$('#virtualContentType').val(articleJson.virtualContentType || 'text');
+			$('#physicalWeight').val(articleJson.physicalWeight || '');
+			$('#physicalDimensions').val(articleJson.physicalDimensions || '');
+
+			// 触发内容类型切换以显示商品字段
+			toggleContentType();
+			// 触发商品类型切换以显示对应字段
+			toggleProductType();
+		} else {
+			$('#isProductFalse').prop('checked', true);
+			toggleContentType();
+		}
 
 		// 分类下拉框赋值
 		var category = $('#category');
@@ -706,6 +849,172 @@
 			});
 		};
 		input.click();
+	}
+
+	// ========== 🛍️ 电商功能 - 内容类型切换 ==========
+
+	// 切换内容类型（文章/商品）
+	function toggleContentType() {
+		const isProduct = document.querySelector('input[name="isProduct"]:checked').value === 'true';
+
+		// 更新标题文本
+		const titleLabel = document.querySelector('label[for="title"]');
+		const titleInput = document.getElementById('title');
+		const saveButton = document.getElementById('btn_saveEdit');
+
+		if (isProduct) {
+			titleLabel.textContent = '商品名称 *';
+			titleInput.placeholder = '请输入商品名称';
+
+			// 显示商品设置，隐藏付费文章设置
+			document.getElementById('productSettings').style.display = 'block';
+			document.getElementById('articlePaidSettings').style.display = 'none';
+
+			// 更新按钮文本
+			saveButton.innerHTML = '💾 保存商品';
+		} else {
+			titleLabel.textContent = '文章标题 *';
+			titleInput.placeholder = '请输入文章标题';
+
+			// 隐藏商品设置，显示付费文章设置
+			document.getElementById('productSettings').style.display = 'none';
+			document.getElementById('articlePaidSettings').style.display = 'block';
+
+			// 更新按钮文本
+			saveButton.innerHTML = '💾 保存文章';
+		}
+
+		// 更新选中状态样式
+		document.querySelectorAll('.content-type-option').forEach(option => {
+			const radio = option.querySelector('input[type="radio"]');
+			if (radio.checked) {
+				option.style.background = 'rgba(255,255,255,0.9)';
+				option.style.transform = 'scale(1.05)';
+				option.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+			} else {
+				option.style.background = 'rgba(255,255,255,0.2)';
+				option.style.transform = 'scale(1)';
+				option.style.boxShadow = 'none';
+			}
+		});
+	}
+
+	// 切换商品类型（虚拟/实物）
+	function toggleProductType() {
+		const productType = document.getElementById('productType').value;
+		const virtualSettings = document.getElementById('virtualProductSettings');
+		const physicalSettings = document.getElementById('physicalProductSettings');
+
+		if (productType === 'virtual') {
+			virtualSettings.style.display = 'block';
+			physicalSettings.style.display = 'none';
+
+			// 虚拟商品必填内容
+			document.getElementById('virtualContent').setAttribute('required', 'true');
+		} else {
+			virtualSettings.style.display = 'none';
+			physicalSettings.style.display = 'block';
+
+			// 实物商品不必填虚拟内容
+			document.getElementById('virtualContent').removeAttribute('required');
+		}
+	}
+
+	// 自定义字段计数器
+	let customFieldIndex = 0;
+
+	// 添加自定义表单字段
+	function addCustomField() {
+		customFieldIndex++;
+		const fieldId = 'customField_' + customFieldIndex;
+
+		const fieldHtml = `
+			<div class="custom-field-item" id="${fieldId}" style="padding: 15px; margin-bottom: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px;">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>字段名称</label>
+							<input type="text" class="form-control" name="customField_name[]" placeholder="例如: size" required>
+							<small class="text-muted">英文标识</small>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label>字段标签</label>
+							<input type="text" class="form-control" name="customField_label[]" placeholder="例如: 选择尺码" required>
+							<small class="text-muted">显示给用户</small>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label>字段类型</label>
+							<select class="form-control" name="customField_type[]" onchange="toggleFieldOptions('${fieldId}', this.value)">
+								<option value="text">文本框</option>
+								<option value="select">下拉选择</option>
+								<option value="textarea">多行文本</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label>是否必填</label>
+							<select class="form-control" name="customField_required[]">
+								<option value="true">是</option>
+								<option value="false">否</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group">
+							<label>&nbsp;</label>
+							<button type="button" class="btn btn-danger btn-block" onclick="removeCustomField('${fieldId}')">
+								🗑️ 删除
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="row field-options-container" style="display: none;">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>选项列表（每行一个选项）</label>
+							<textarea class="form-control" name="customField_options[]" rows="3" placeholder="S&#10;M&#10;L&#10;XL"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>占位符提示</label>
+							<input type="text" class="form-control" name="customField_placeholder[]" placeholder="例如: 请选择尺码">
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
+
+		document.getElementById('customFieldsList').insertAdjacentHTML('beforeend', fieldHtml);
+	}
+
+	// 删除自定义字段
+	function removeCustomField(fieldId) {
+		const field = document.getElementById(fieldId);
+		if (field && confirm('确定删除这个字段吗？')) {
+			field.remove();
+		}
+	}
+
+	// 切换字段选项显示
+	function toggleFieldOptions(fieldId, fieldType) {
+		const field = document.getElementById(fieldId);
+		const optionsContainer = field.querySelector('.field-options-container');
+
+		if (fieldType === 'select') {
+			optionsContainer.style.display = 'block';
+		} else {
+			optionsContainer.style.display = 'none';
+		}
 	}
 </script>
 
